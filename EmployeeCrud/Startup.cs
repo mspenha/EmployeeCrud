@@ -2,9 +2,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using EmployeeCrud.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.Data.Sqlite;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -24,6 +27,13 @@ namespace EmployeeCrud
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
+            var connectionStringBuilder = new SqliteConnectionStringBuilder();
+            connectionStringBuilder.DataSource = "./WebApplication.db";
+            var connection = new SqliteConnection(connectionStringBuilder.ConnectionString);
+            connection.Open();
+            services.AddDbContext<EmployeeContext>(options =>
+                options.UseSqlite("Data Source= ./WebApplication.db")
+            );
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
